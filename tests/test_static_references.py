@@ -1,0 +1,48 @@
+import unittest
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import urlparse
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class ReferenceParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.references = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag in {"img", "script"} and attrs.get("src"):
+            self.references.append(attrs["src"])
+        if tag in {"a", "link"} and attrs.get("href"):
+            self.references.append(attrs["href"])
+
+
+def is_local_reference(reference):
+    parsed = urlparse(reference)
+    return not parsed.scheme and not parsed.netloc and not reference.startswith("#")
+
+
+class StaticReferenceTests(unittest.TestCase):
+    def test_html_references_exist(self):
+        missing = []
+
+        for html_file in ROOT.glob("*.html"):
+            parser = ReferenceParser()
+            parser.feed(html_file.read_text(encoding="utf-8"))
+
+            for reference in parser.references:
+                if not is_local_reference(reference):
+                    continue
+
+                target = (html_file.parent / urlparse(reference).path).resolve()
+                if not target.exists():
+                    missing.append(f"{html_file.name}: {reference}")
+
+        self.assertEqual([], missing)
+
+
+if __name__ == "__main__":
+    unittest.main()
