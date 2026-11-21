@@ -1,0 +1,17 @@
+{
+  "name": "الجاسوس",
+  "short_name": "الجاسوس",
+  "description": "لعبة حفلات. الجميع يعرف المكان. واحد منكم يكذب.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#0B0C0F",
+  "theme_color": "#0B0C0F",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
